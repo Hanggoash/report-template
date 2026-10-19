@@ -1,0 +1,670 @@
+% !TeX program = xelatex
+% !TeX encoding = UTF-8
+% ======================================================================
+% 个人学术汇报 Beamer 模板：XCPC 题解版式参考
+% 编译建议：XeLaTeX，连续编译两次以更新目录、引用和页码。
+% 文件结构：个人配置 -> 主题设置 -> 常用命令 -> 示例页面。
+% 可直接复制下方 frame，替换占位文字、公式和数据。
+% ======================================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage[UTF8,fontset=none]{ctex}
+% 字体与参考题解对应：正文思源黑体 CN，标题和页眉页脚 Fandol 黑体，
+% 英文使用带光学字号的 Latin Modern，数学符号保留 Computer Modern。
+% 思源黑体 CN 2.004 的字形已与题解 PDF 中嵌入的中文字体核对。
+% Overleaf：将随附的 fonts/ 目录上传到项目，使用 XeLaTeX 编译。
+% 优先读取项目内的字体，其次读取系统字体；单文件预览回退到 Fandol 黑体。
+\usepackage[T1]{fontenc}
+\usepackage[nomath]{lmodern}
+% 思源黑体没有原生中文斜体：中文强调沿用直立字形，英文斜体不受影响。
+\newcommand{\AcademicCJKFonts}[3][]{%
+  \setCJKmainfont[BoldFont={#3},ItalicFont={#2},BoldItalicFont={#3},#1]{#2}%
+  \setCJKsansfont[BoldFont={#3},ItalicFont={#2},BoldItalicFont={#3},#1]{#2}%
+}
+\IfFileExists{fonts/SourceHanSansCN-Regular.otf}{%
+  \AcademicCJKFonts[Path=fonts/]{SourceHanSansCN-Regular.otf}{SourceHanSansCN-Bold.otf}
+  \PackageInfo{academic_beamer}{Using project fonts: Source Han Sans CN}
+}{%
+  \IfFontExistsTF{Source Han Sans CN}{%
+    \AcademicCJKFonts{Source Han Sans CN}{Source Han Sans CN Bold}
+    \PackageInfo{academic_beamer}{Using system fonts: Source Han Sans CN}
+  }{%
+    \AcademicCJKFonts{FandolHei-Regular.otf}{FandolHei-Bold.otf}
+    \PackageInfo{academic_beamer}{Source Han Sans CN not found; standalone preview uses Fandol Hei}
+  }
+}
+% 标题、导航和页脚对应题解中的 Fandol 黑体，单独定义以保留 \heiti。
+\setCJKfamilyfont{zhhei}[BoldFont=FandolHei-Bold.otf,
+  ItalicFont=FandolHei-Regular.otf,BoldItalicFont=FandolHei-Bold.otf]{FandolHei-Regular.otf}
+\providecommand{\heiti}{\CJKfamily{zhhei}}
+\setCJKmonofont[BoldFont=FandolHei-Bold.otf,
+  ItalicFont=FandolFang-Regular.otf,BoldItalicFont=FandolHei-Bold.otf]{FandolFang-Regular.otf}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{appendixnumberbeamer}
+\usepackage{listings}
+
+% 参考题解的拉丁数学变量使用 Latin Modern Roman Italic。
+% 只替换 A--Z、a--z，希腊字母、数字、运算符和大括号保留原数学字体。
+\DeclareSymbolFont{ReferenceMathLetters}{T1}{lmr}{m}{it}
+\SetSymbolFont{ReferenceMathLetters}{bold}{T1}{lmr}{bx}{it}
+\SetSymbolFont{operators}{normal}{OT1}{cmr}{m}{n}
+\SetSymbolFont{operators}{bold}{OT1}{cmr}{bx}{n}
+\makeatletter
+\AtBeginDocument{%
+  \begingroup
+    \count@="41
+    \loop
+      \global\mathcode\count@=\numexpr"7000+256*\symReferenceMathLetters+\count@\relax
+      \ifnum\count@<"5A\advance\count@ by 1
+    \repeat
+    \count@="61
+    \loop
+      \global\mathcode\count@=\numexpr"7000+256*\symReferenceMathLetters+\count@\relax
+      \ifnum\count@<"7A\advance\count@ by 1
+    \repeat
+  \endgroup
+}
+\makeatother
+
+% ======================================================================
+% 1. 个人配置：以后每次汇报主要修改这一段
+% ======================================================================
+\newcommand{\TalkTitle}{你的研究汇报题目}
+\newcommand{\ShortTitle}{研究汇报}
+\newcommand{\TalkSubtitle}{Research Seminar}
+\newcommand{\Presenter}{你的姓名}
+\newcommand*{\Affiliation}{} % 可选：学校、机构或个人主页
+\newcommand*{\Department}{} % 可选：学院、实验室或课题组
+\newcommand{\TalkDate}{\today}
+\newcommand{\ContactEmail}{name@example.com}
+% 双层页脚：上行左侧组织、右侧姓名，下行左侧汇报用途或名称。
+\newcommand{\FooterOrganization}{\Affiliation}
+\newcommand{\FooterName}{\Presenter}
+\newcommand{\FooterPurpose}{\ShortTitle}
+
+% 按用户截图中的 RGB 原生值设置上下两种蓝色。
+\definecolor{NavBlue}{RGB}{21,46,78}
+\definecolor{TitleBlue}{RGB}{43,93,157}
+\definecolor{NavHighlight}{HTML}{67C5FF} % 当前章节：明亮蓝色
+\colorlet{NavInactive}{white!65!NavBlue} % 其他章节：浅灰蓝色
+\colorlet{Primary}{TitleBlue}
+\definecolor{FooterPurposeColor}{RGB}{0,204,255}
+\definecolor{Accent}{HTML}{008A91}
+\definecolor{Text}{HTML}{253344}
+\definecolor{Muted}{HTML}{637488}
+\definecolor{Light}{HTML}{F2F6F8}
+\definecolor{Rule}{HTML}{DAE3EA}
+\definecolor{Alert}{HTML}{B45335}
+
+% 可选开关。将 false 改为 true 可启用章节过渡页。
+\newif\ifSectionPages
+\SectionPagesfalse
+\newif\ifNavigation
+\Navigationtrue % 顶部章节与页面小圆点导航
+
+% 校徽默认留空。使用本地图片时可改为：
+% \renewcommand{\LogoContent}{\includegraphics[height=0.7cm]{logo.pdf}}
+% 默认模板不依赖任何外部图片或 .bib 文件。
+\newcommand{\LogoContent}{}
+
+\title[\ShortTitle]{\TalkTitle}
+\subtitle{\TalkSubtitle}
+\author[\Presenter]{\Presenter}
+\institute[\Affiliation]{\Affiliation\ifx\Department\empty\else\\\Department\fi}
+\date{\TalkDate}
+
+% ======================================================================
+% 2. 主题设置
+% ======================================================================
+\usetheme{default}
+\useoutertheme[subsection=false]{miniframes}
+\usefonttheme{professionalfonts}
+\setbeamersize{text margin left=0.9cm,text margin right=0.9cm}
+\setbeamercolor{normal text}{fg=Text,bg=white}
+\setbeamercolor{structure}{fg=Accent}
+\setbeamercolor{title}{fg=white,bg=Primary}
+\setbeamercolor{subtitle}{fg=Muted}
+\setbeamercolor{frametitle}{fg=white,bg=TitleBlue}
+\setbeamercolor{author}{fg=Primary}
+\setbeamercolor{institute}{fg=Muted}
+\setbeamercolor{date}{fg=Muted}
+\setbeamercolor{footline upper}{fg=white,bg=TitleBlue}
+\setbeamercolor{footline lower}{fg=white,bg=NavBlue}
+\setbeamercolor{section in head/foot}{fg=white,bg=NavBlue}
+\setbeamercolor{subsection in head/foot}{fg=white,bg=NavBlue}
+\setbeamercolor{mini frame}{fg=white,bg=NavBlue}
+\setbeamercolor{alerted text}{fg=Alert}
+\setbeamercolor{block title}{fg=white,bg=Primary}
+\setbeamercolor{block body}{fg=Text,bg=Light}
+\setbeamercolor{block title alerted}{fg=white,bg=Alert}
+\setbeamercolor{block body alerted}{fg=Text,bg=Alert!8}
+\setbeamercolor{block title example}{fg=white,bg=Accent}
+\setbeamercolor{block body example}{fg=Text,bg=Accent!7}
+\setbeamerfont{title}{family=\sffamily\heiti,size=\LARGE,series=\mdseries}
+\setbeamerfont{subtitle}{size=\normalsize}
+\setbeamerfont{frametitle}{family=\sffamily\heiti,size=\large,series=\mdseries}
+\setbeamerfont{author}{family=\sffamily,size=\normalsize,series=\mdseries}
+\setbeamerfont{institute}{size=\small}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{footline}{family=\sffamily\heiti,size=\tiny}
+\setbeamerfont{section in head/foot}{family=\sffamily\heiti,size=\tiny}
+\setbeamerfont{subsection in head/foot}{family=\sffamily\heiti,size=\tiny}
+\setbeamerfont{block title}{family=\sffamily,size=\normalsize,series=\mdseries}
+\setbeamerfont{caption}{size=\scriptsize}
+\setbeamerfont{caption name}{series=\bfseries}
+\setbeamerfont{section in toc}{size=\normalsize}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{items}[circle]
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{mini frames}[default]
+% 在链接内容内明确指定颜色，避免被全局 linkcolor 覆盖。
+\setbeamertemplate{section in head/foot}{%
+  \textcolor{NavHighlight}{\insertsectionhead}%
+}
+\setbeamertemplate{section in head/foot shaded}{%
+  \textcolor{NavInactive}{\insertsectionhead}%
+}
+% 导航栏仅保留章节和小圆点，不绘制上下分隔线。
+\setbeamertemplate{headline}{%
+  \begin{beamercolorbox}[wd=\paperwidth]{section in head/foot}
+    \vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+  \end{beamercolorbox}%
+}
+\ifNavigation\else\setbeamertemplate{headline}{}\fi
+\setbeamercovered{invisible}
+\hypersetup{colorlinks=true,urlcolor=Accent,linkcolor=Primary,citecolor=Accent}
+
+% 每个 \section 后的首个 frame 自动显示浅蓝标题栏。
+% 其余 frame 保留源码中的标题信息，但不显示标题栏。
+\newif\ifSectionTitlePending
+\newif\ifShowSectionTitle
+\SectionTitlePendingfalse
+\ShowSectionTitlefalse
+\AtBeginEnvironment{frame}{%
+  \ifSectionTitlePending
+    \global\ShowSectionTitletrue
+    \global\SectionTitlePendingfalse
+  \else
+    \global\ShowSectionTitlefalse
+  \fi
+}
+\setbeamertemplate{frametitle}{%
+  \ifShowSectionTitle
+    \nointerlineskip
+    % vmode 让上下间距直接作用于色带；相同的留白使文字整体居中。
+    \begin{beamercolorbox}[vmode,wd=\paperwidth,leftskip=0.35cm,rightskip=0.35cm plus1fil,sep=0pt]{frametitle}
+      \vskip0.20cm
+      {\usebeamerfont{frametitle}\insertframetitle\par}
+      \ifx\insertframesubtitle\empty\else
+        \vskip0.03cm
+        {\small\color{white!80!TitleBlue}\insertframesubtitle\par}
+      \fi
+      \vskip0.20cm
+    \end{beamercolorbox}%
+  \fi
+}
+
+% 所有页面使用同一双层页脚，与页首的深蓝 / 浅蓝顺序对称。
+% 页码按 PDF 页面连续编号，包含封面、讨论页和备用页。
+\setbeamertemplate{footline}{%
+  \vbox{%
+    \offinterlineskip
+    \begin{beamercolorbox}[wd=\paperwidth,ht=0.22cm,dp=0.10cm,leftskip=0.35cm,rightskip=0.35cm]{footline upper}
+      \usebeamerfont{footline}\strut\FooterOrganization\hfill\FooterName
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=0.22cm,dp=0.10cm,leftskip=0.35cm,rightskip=0.35cm]{footline lower}
+      \usebeamerfont{footline}\strut{\color{FooterPurposeColor}\FooterPurpose}\hfill
+      \insertpagenumber\,/\,\insertdocumentendpage
+    \end{beamercolorbox}%
+  }%
+}
+
+% 标题页：中英文标题在同一色块内，个人信息在下方居中。
+\setbeamertemplate{title page}{%
+  \vfill
+  {\centering\LogoContent\par}
+  \vspace{0.2cm}
+  \begin{beamercolorbox}[wd=\textwidth,sep=0.5cm,center,rounded=true,shadow=true]{title}
+    {\usebeamerfont{title}\inserttitle\par}
+    \vspace{0.22cm}
+    {\normalsize\color{white!82!Primary}\insertsubtitle\par}
+  \end{beamercolorbox}
+  \vspace{0.55cm}
+  {\centering
+    \usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor\par
+    \ifx\Affiliation\empty
+      \ifx\Department\empty\else
+        \vspace{0.15cm}{\small\color{Muted}\Department\par}
+      \fi
+    \else
+      \vspace{0.15cm}
+      {\usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute\par}
+    \fi
+    \vspace{0.35cm}
+    {\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate\par}
+  }
+  \vfill
+}
+
+\AtBeginSection[]{%
+  \global\SectionTitlePendingtrue
+  \ifSectionPages
+    \begin{frame}[noframenumbering]{\insertsectionhead}
+      \vfill
+      {\color{Accent}\large\thesection\par}
+      \vspace{0.3cm}
+      {\color{Primary}\LARGE\mdseries\heiti\insertsectionhead\par}
+      \vspace{0.25cm}{\color{Accent}\rule{1.5cm}{1.4pt}\par}
+      \vfill
+    \end{frame}
+  \fi
+}
+
+% ======================================================================
+% 3. 常用命令
+% ======================================================================
+\newcommand{\highlight}[1]{{\color{Accent}\bfseries #1}}
+\newcommand{\source}[1]{\par\vspace{0.12cm}{\scriptsize\color{Muted}来源：#1\par}}
+\newcommand{\takeaway}[1]{\par\vspace{0.18cm}{\color{Accent}\bfseries #1\par}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\vect}[1]{\bm{#1}}
+
+% 在没有图片的情况下显示占位框；图片存在时按比例缩放。
+% 用法：\AcademicFigure[0.35\textheight]{figure.pdf}{图示占位说明}
+% 建议使用 PDF 矢量图，或高分辨率 PNG / JPG。
+\newcommand{\AcademicFigure}[3][0.43\textheight]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=\linewidth,height=#1,keepaspectratio]{#2}%
+  }{%
+    \begingroup
+    \setlength{\fboxsep}{0pt}%
+    \color{Rule}\fbox{%
+      \begin{minipage}[c][#1][c]{0.98\linewidth}
+        \centering\color{Muted}\small #3\par
+        \vspace{0.15cm}\scriptsize\texttt{\detokenize{#2}}
+      \end{minipage}%
+    }%
+    \endgroup
+  }%
+}
+
+% 图表默认样式。此处示例数据仅用于排版展示。
+\pgfplotsset{
+  academic/.style={
+    width=\linewidth,height=4.35cm,
+    axis lines=left,
+    axis line style={Rule},
+    tick style={draw=none},
+    tick label style={font=\scriptsize,text=Muted},
+    label style={font=\small,text=Text},
+    grid=major,grid style={Rule!60},
+    legend style={font=\scriptsize,draw=none,fill=none,at={(0.98,0.98)},anchor=north east},
+    legend cell align=left,
+    every axis plot/.append style={line width=1.2pt},
+  }
+}
+
+% 代码使用 listings，不需要 shell-escape 或额外程序。
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{Accent}\bfseries,
+  commentstyle=\color{Muted},
+  stringstyle=\color{Alert},
+  backgroundcolor=\color{Light},
+  frame=single,rulecolor=\color{Rule},
+  framesep=0.18cm,
+  showstringspaces=false,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  tabsize=4,
+}
+
+% ======================================================================
+% 4. 示例页面：删除或复制整个 frame 即可调整汇报结构
+% 本文件所有研究描述、数据与文献均为占位示例。
+% ======================================================================
+\begin{document}
+
+% 封面保留导航栏和双层页脚，PDF 页码从 1 开始。
+\begin{frame}[noframenumbering]
+  \titlepage
+\end{frame}
+
+\begin{frame}{汇报内容}
+  \vspace{0.15cm}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{研究背景}
+
+\begin{frame}{研究问题}
+  \begin{itemize}
+    \setlength{\itemsep}{0.42cm}
+    \item \highlight{研究对象}：说明具体系统、现象或应用场景。
+    \item \highlight{现有局限}：给出当前方法难以处理的条件。
+    \item \highlight{核心问题}：用一句话描述本次汇报要回答的问题。
+  \end{itemize}
+  \vspace{0.35cm}
+  \begin{block}{研究目标}
+    在给定假设下，改善目标指标，并解释改善的原因。
+  \end{block}
+\end{frame}
+
+\begin{frame}{相关工作与研究切入点}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \highlight{已有方法}
+      \vspace{0.2cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.22cm}
+        \item 方法 A 的主要假设与适用条件。
+        \item 方法 B 的改进及其代价。
+        \item 当前工作尚未解决的限制。
+      \end{itemize}
+      \source{替换为实际文献，例如 \cite{ref:related}。}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \highlight{本研究的切入点}
+      \vspace{0.2cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.22cm}
+        \item 需要放宽或补充的假设。
+        \item 与已有方法的具体区别。
+        \item 用于验证区别的实验或分析。
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{0.35cm}
+  \takeaway{研究切入点：[现有研究留下的问题及其意义]}
+\end{frame}
+
+\section{方法与理论}
+
+\begin{frame}{问题定义与目标函数}{Problem Formulation}
+  设数据集为 $\mathcal{D}=\{(\vect{x}_i,y_i)\}_{i=1}^{n}$，模型参数为 $\vect{\theta}\in\R^d$。
+  \vspace{0.15cm}
+  \begin{equation}
+    \hat{\vect{\theta}}
+    = \arg\min_{\vect{\theta}\in\R^d}
+      \underbrace{\frac{1}{n}\sum_{i=1}^{n}
+      \ell\!\left(f_{\vect{\theta}}(\vect{x}_i),y_i\right)}_{\text{数据拟合}}
+      + \lambda\underbrace{\Omega(\vect{\theta})}_{\text{正则项}}.
+    \label{eq:objective}
+  \end{equation}
+  \vspace{0.18cm}
+  \begin{itemize}
+    \setlength{\itemsep}{0.17cm}
+    \item $\ell$：损失函数，反映预测与观测的偏差。
+    \item $\Omega$：正则项，表达对模型的约束。
+    \item $\lambda\geq 0$：拟合误差与正则约束的权衡参数。
+  \end{itemize}
+  \source{公式仅演示数学排版，请替换为自己的模型。}
+\end{frame}
+
+\begin{frame}{方法流程}
+  \vspace{0.2cm}
+  \begin{center}
+    % 此流程是可编辑的学术图示，文字和连接关系均可修改。
+    \begin{tikzpicture}[
+      stage/.style={draw=Rule,fill=Light,rounded corners=2pt,
+        minimum height=1.05cm,text width=3.15cm,align=center,font=\small},
+      connector/.style={-{Stealth[length=2.2mm]},draw=Accent,line width=0.9pt}
+    ]
+      \node[stage] (data) {数据与预处理\\{\scriptsize 采样、清洗、特征表示}};
+      \node[stage,right=0.7cm of data] (model) {模型与优化\\{\scriptsize 目标函数、求解过程}};
+      \node[stage,right=0.7cm of model] (eval) {评估与分析\\{\scriptsize 对照、消融、误差分析}};
+      \draw[connector] (data) -- (model);
+      \draw[connector] (model) -- (eval);
+    \end{tikzpicture}
+  \end{center}
+  \vspace{0.5cm}
+  \begin{enumerate}
+    \setlength{\itemsep}{0.2cm}
+    \item 输入：说明数据形态、规模与前提条件。
+    \item 核心步骤：突出本方法新增或改变的操作。
+    \item 输出：说明方法产生什么结果，如何验证。
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{算法与实现 Algorithm}
+  \highlight{Gradient descent}
+  \vspace{0.15cm}
+  \begin{lstlisting}[language=Python]
+def gradient_descent(grad, theta0, step, n_steps):
+    theta = theta0.copy()
+    for _ in range(n_steps):
+        theta = theta - step * grad(theta)
+    return theta
+  \end{lstlisting}
+  \vspace{0.2cm}
+  \begin{itemize}
+    \setlength{\itemsep}{0.17cm}
+    \item 输入：梯度函数、初值、步长与迭代次数。
+    \item 更新：$\vect{\theta}_{t+1}=\vect{\theta}_t-\eta\nabla g(\vect{\theta}_t)$。
+    \item 说明：伪代码示例，假设参数支持向量运算。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{命题与推导}
+  \begin{block}{命题示例：正定二次函数的唯一极小点}
+    对 $g(\vect{\theta})=\tfrac{1}{2}\vect{\theta}^{\mathsf T}
+    A\vect{\theta}-\vect{b}^{\mathsf T}\vect{\theta}$，若 $A$ 对称正定，
+    则唯一极小点为 $\vect{\theta}^{*}=A^{-1}\vect{b}$。
+  \end{block}
+  \vspace{0.15cm}
+  \begin{align*}
+    \nabla g(\vect{\theta}) &= A\vect{\theta}-\vect{b},\\
+    \nabla^2g(\vect{\theta}) &= A\succ 0,\\
+    \nabla g(\vect{\theta}^{*})=0
+      &\quad\Longrightarrow\quad \vect{\theta}^{*}=A^{-1}\vect{b}.
+  \end{align*}
+  \takeaway{正定性保证该驻点是唯一的全局极小点。}
+\end{frame}
+
+\section{实验与结果}
+
+\begin{frame}{实验设置 Experimental Setup}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \highlight{数据与评价}
+      \vspace{0.15cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.22cm}
+        \item 数据集、样本规模与划分方式。
+        \item 指标定义与数值方向。
+        \item 重复实验次数与统计方式。
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \highlight{比较与实现}
+      \vspace{0.15cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.22cm}
+        \item 基线方法与比较条件。
+        \item 参数选择与消融设置。
+        \item 计算资源与运行环境。
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{0.45cm}
+  \begin{alertblock}{报告时需要交代的条件}
+    数据处理、训练预算和评价协议会影响结果的可比性。
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{实验结果：方法比较}
+  \vspace{0.12cm}
+  \begin{table}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{lccc}
+      \toprule
+      方法 & 指标 A $\uparrow$ & 指标 B $\downarrow$ & 时间 / s $\downarrow$\\
+      \midrule
+      基线 A & $80.2\pm0.5$ & $0.31\pm0.02$ & 12.4\\
+      基线 B & $82.1\pm0.4$ & $0.28\pm0.02$ & 15.8\\
+      本方法 & \textcolor{Accent}{\textbf{85.3}$\pm0.3$}
+             & \textcolor{Accent}{\textbf{0.24}$\pm0.01$} & 14.2\\
+      \bottomrule
+    \end{tabular}
+    \caption{虚构数据，仅演示表格样式。箭头表示指标方向。}
+  \end{table}
+  \vspace{0.18cm}
+  \takeaway{结论占位：说明提升了什么，以及付出了什么代价。}
+  \source{请填入真实实验记录，并注明误差为标准差或置信区间。}
+\end{frame}
+
+\begin{frame}{训练损失与收敛趋势}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.65\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[
+          academic,xlabel={训练轮数},ylabel={损失},
+          xmin=0,xmax=50,ymin=0,ymax=1.05,
+          xtick={0,10,20,30,40,50},ytick={0,0.25,0.5,0.75,1},
+        ]
+          \addplot[color=Muted,dashed,mark=square*,mark size=1.6pt]
+            coordinates {(0,1.00) (10,0.72) (20,0.54) (30,0.42) (40,0.34) (50,0.30)};
+          \addlegendentry{基线}
+          \addplot[color=Accent,mark=*,mark size=1.6pt]
+            coordinates {(0,1.00) (10,0.55) (20,0.35) (30,0.24) (40,0.19) (50,0.17)};
+          \addlegendentry{本方法}
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.30\textwidth}
+      \highlight{结果解读}
+      \vspace{0.18cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.22cm}
+        \item 描述曲线的变化趋势。
+        \item 指明比较的区间与条件。
+        \item 解释趋势可能对应的机制。
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \source{虚构数据，仅演示 PGFPlots。可直接修改 coordinates。}
+\end{frame}
+
+\begin{frame}{图像分析与定性结果}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.57\textwidth}
+      \begin{figure}
+        \centering
+        \AcademicFigure[0.43\textheight]{your-figure.pdf}{替换为实验图、模型示意图或定性结果}
+        \caption{图像说明：对象、条件和需要观察的细节。}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \highlight{主要观察}
+      \vspace{0.18cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.23cm}
+        \item 对比图中哪些具体区域？
+        \item 观察支持哪项判断？
+        \item 是否存在失败案例或边界条件？
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \source{请注明图像来源或对应实验条件。}
+\end{frame}
+
+\section{总结与讨论}
+
+\begin{frame}{总结与后续工作}{Conclusions and Future Work}
+  \highlight{本次工作的结论}
+  \vspace{0.12cm}
+  \begin{itemize}
+    \setlength{\itemsep}{0.17cm}
+    \item 回答了哪个研究问题？给出最直接的结论。
+    \item 方法的主要贡献，以及支持它的证据。
+  \end{itemize}
+  \vspace{0.33cm}
+  \highlight{局限与下一步}
+  \vspace{0.12cm}
+  \begin{itemize}
+    \setlength{\itemsep}{0.17cm}
+    \item 当前结论依赖的条件，以及尚未验证的范围。
+    \item 下一步具体实验或理论问题。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{参考文献}
+  % 不依赖外部 .bib，单文件即可编译。
+  % 文献较多时建议拆为多个 frame；避免缩小到难以阅读。
+  \begin{thebibliography}{9}
+    \bibitem{ref:related}
+      作者姓名。
+      \newblock \emph{相关工作的论文标题}。
+      \newblock 期刊或会议名称，年份。
+    \bibitem{ref:method}
+      Author names.
+      \newblock \emph{Title of a paper or book}.
+      \newblock Journal, conference, or publisher, year.
+  \end{thebibliography}
+  \vspace{0.3cm}
+  {\small\color{Muted}以上为文献占位条目，请替换为真实引用。}
+\end{frame}
+
+\begin{frame}[noframenumbering]
+  \vfill
+  {\color{Primary}\LARGE\mdseries\heiti 谢谢\par}
+  \vspace{0.3cm}
+  {\color{Accent}\large 欢迎提问与讨论\par}
+  \vspace{0.55cm}
+  {\color{Muted}\Presenter\par}
+  \vspace{0.12cm}
+  {\small\color{Muted}\href{mailto:\ContactEmail}{\ContactEmail}\par}
+  \vfill
+\end{frame}
+
+% ======================================================================
+% 5. 备用页：保留相同导航栏、双层页脚和连续 PDF 页码
+% 删除以下部分也不会影响正文。
+% ======================================================================
+\appendix
+
+\begin{frame}{备用页：推导细节}
+  对称正定矩阵 $A$ 可逆，且对任意 $\vect{\theta}\neq\vect{\theta}^{*}$，
+  \begin{align*}
+    g(\vect{\theta})-g(\vect{\theta}^{*})
+      &= \frac{1}{2}(\vect{\theta}-\vect{\theta}^{*})^{\mathsf T}
+           A(\vect{\theta}-\vect{\theta}^{*})\\
+      &>0.
+  \end{align*}
+  \vspace{0.2cm}
+  因此 $\vect{\theta}^{*}=A^{-1}\vect{b}$ 是唯一极小点。
+  \vspace{0.3cm}
+  \begin{exampleblock}{适合放在备用页的内容}
+    完整证明、额外实验、参数敏感性、失败案例或补充文献。
+  \end{exampleblock}
+\end{frame}
+
+% ======================================================================
+% 空白页面骨架：复制时取消注释
+% ======================================================================
+% \begin{frame}{页面标题}
+%   \begin{itemize}
+%     \item 第一项内容。
+%     \item 第二项内容。
+%   \end{itemize}
+% \end{frame}
+%
+% 分步展示示例：\item<1-> ... 或 \uncover<2->{...}
+% 使用分步展示时，PDF 页面数可能多于逻辑 frame 数；页脚按 PDF 页编号。
+% 放代码时使用 \begin{frame}[fragile]{代码示例}。
+
+\end{document}

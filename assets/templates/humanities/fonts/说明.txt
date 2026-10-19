@@ -1,0 +1,10 @@
+已从原项目完整复制三种指定字体：
+simsun.ttc    正文宋体（FontIndex=0）
+simhei.ttf    章、节标题黑体
+STZHONGS.TTF  报告题目华文中宋
+
+完整复制文件夹，代码会自动使用指定字体。
+文件名和大小写必须与代码一致。只改扩展名不能转换字体格式。
+如果只复制主文档或漏掉 fonts/，默认草稿模式会用备用字体预览。
+正式提交前可将 report.tex 中的 \strictfontsfalse 改为 \strictfontstrue。
+严格模式会在缺少指定字体时中止编译，便于检查字体文件是否齐全。

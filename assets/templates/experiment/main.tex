@@ -1,0 +1,299 @@
+% !TeX program = xelatex
+% !TeX encoding = UTF-8
+% 实验报告模板：个人配置 -> 排版设置 -> 常用组件 -> 正文示例。
+% 从三个报告提炼：A4 / 12pt / 四边 2.5cm / 1.35 倍行距。
+% 每次使用请复制整个文件夹；用 XeLaTeX 编译两次以更新目录和引用。
+\documentclass[UTF8,a4paper,12pt,fontset=fandol]{ctexart}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx}
+\usepackage[hidelinks]{hyperref}
+
+% ======================================================================
+% 1. 个人配置：修改已有定义的右侧内容，不要重复定义同名命令。
+% ======================================================================
+\newcommand{\ReportTitle}{某某课程实验报告}
+\newcommand{\TopicLabel}{实验题目} % 可改为“实验选题”或“课程设计题目”
+\newcommand{\ReportTopic}{在此填写实验或课程设计题目}
+\newcommand{\StudentName}{你的姓名}
+\newcommand{\StudentID}{你的学号}
+\newcommand{\Supervisor}{指导教师姓名}
+\newcommand{\ReportDate}{2026年10月5日} % 按实际完成日期修改
+\newcommand{\Institution}{xx大学计算机科学与技术学院}
+\newcommand{\LogoFile}{images/logo.png}
+% 不需要仓库地址时留空；URL 中的下划线不需要写成 \_。
+\newcommand{\RepositoryURL}{}
+\newcommand{\SummaryLabel}{摘要} % 也可改为“自我评价”
+\newcommand{\ReportSummary}{在此简述实验对象、实现方法、验证方式与主要结论。建议控制在一百至一百五十字；不需要时关闭封面摘要。}
+
+\newif\ifShowLogo
+\ShowLogotrue
+\newif\ifShowTopic
+\ShowTopictrue
+\newif\ifShowSummary
+\ShowSummaryfalse % 改为 \ShowSummarytrue 显示封面摘要
+\newif\ifShowContents
+\ShowContentstrue
+
+% ======================================================================
+% 2. 排版设置：通常无需修改。
+% 显式使用 Fandol 中文字体；TeX Live 自带，无需上传 fonts/。
+% ======================================================================
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\setstretch{1.35}
+\setlength{\parindent}{2em}
+\setcounter{tocdepth}{2} % 目录显示到 subsection
+\setcounter{secnumdepth}{3}
+\urlstyle{same}
+\hypersetup{pdftitle={\ReportTitle},pdfauthor={\StudentName}}
+\setlist[itemize]{leftmargin=2em,itemsep=0.2em,topsep=0.4em}
+\setlist[enumerate]{leftmargin=2em,itemsep=0.2em,topsep=0.4em}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=8pt,
+  xleftmargin=1.8em,
+  framexleftmargin=0.5em,
+  tabsize=4,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  aboveskip=0.8em,
+  belowskip=0.6em
+}
+
+% ======================================================================
+% 3. 常用组件。
+% ReportFigure[最大高度]{图片路径}{图注}{引用标签}。
+% 缺图时显示占位框：模板本身不依赖任何实验截图。
+% 图片宽度上限为当前行宽的 90%，保持原比例，不拉伸。
+% ======================================================================
+\newcommand{\ReportImage}[2][6cm]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=0.9\linewidth,height=#1,keepaspectratio]{#2}%
+  }{%
+    \fbox{%
+      \begin{minipage}[c][#1][c]{0.85\linewidth}
+        \centering\small
+        图片占位：请将实验截图放入 images/。\par
+        \medskip\texttt{\detokenize{#2}}
+      \end{minipage}%
+    }%
+  }%
+}
+\newcommand{\ReportFigure}[4][6cm]{%
+  \begin{figure}[H]
+    \centering
+    \ReportImage[#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}%
+}
+\newcommand{\ReportNote}[2]{%
+  \par\medskip\noindent
+  \fbox{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+    \textbf{#1}\par #2
+  \end{minipage}}\par\medskip
+}
+
+% 封面中的下划线信息栏，仅适合较短的姓名、学号、日期。
+\newcommand{\CoverField}[2]{%
+  #1：\underline{\makebox[8cm][c]{#2}}\par\vspace{0.35cm}%
+}
+\newcommand{\MakeReportCover}{%
+  \begin{titlepage}
+    \centering
+    \vspace*{0.8cm}
+    \ifShowLogo
+      \IfFileExists{\LogoFile}{%
+        \includegraphics[width=0.8\linewidth,height=2.2cm,keepaspectratio]{\LogoFile}\par
+      }{%
+        {\zihao{3}\heiti\Institution\par}% 单文件预览中显示文字替代校徽
+      }
+      \vspace{1.2cm}
+    \fi
+    {\zihao{2}\heiti\ReportTitle\par}
+    \vspace{1.5cm}
+    \ifShowTopic
+      {\zihao{3}\heiti\TopicLabel：\par}
+      \vspace{0.4cm}
+      {\zihao{3}\heiti\ReportTopic\par}
+      \vspace{1.4cm}
+    \fi
+    {\zihao{4}
+      \CoverField{姓名}{\StudentName}
+      \CoverField{学号}{\StudentID}
+      \CoverField{指导教师}{\Supervisor}
+      \CoverField{完成日期}{\ReportDate}
+    }
+    % 不用固定宽度下划线包住 URL，长地址可自行换行。
+    \ifx\RepositoryURL\empty\else
+      \begin{minipage}{0.95\linewidth}
+        \centering\small 仓库地址：\expandafter\url\expandafter{\RepositoryURL}
+      \end{minipage}\par
+    \fi
+    \vfill
+    \ifShowSummary
+      \begin{minipage}{\linewidth}
+        \setlength{\parindent}{2em}
+        \textbf{\SummaryLabel：}\par\ReportSummary
+      \end{minipage}\par\vspace{0.8cm}
+    \fi
+    {\zihao{4}\Institution\par}
+    \vspace*{0.4cm}
+  \end{titlepage}%
+}
+
+% ======================================================================
+% 4. 正文：从这里开始替换；示例文字、结果占位和文献必须按实际填写。
+% ======================================================================
+\begin{document}
+\MakeReportCover
+
+% 封面无页码；目录用罗马数字；正文从阿拉伯数字 1 开始。
+\ifShowContents
+  \pagenumbering{Roman}
+  \tableofcontents
+  \clearpage
+\fi
+\pagenumbering{arabic}
+
+\section{实验目的与任务}
+说明实验背景、待解决的问题以及本次需要完成的任务。课程设计可将本节改为“研究背景与意义”，再增加“研究内容”。
+\begin{enumerate}
+  \item 掌握本实验涉及的关键原理与方法。
+  \item 完成核心模块的设计、实现与运行。
+  \item 验证结果正确性，并分析实验现象或性能。
+\end{enumerate}
+
+\section{实验环境}
+记录能复现实验的硬件、软件与版本信息；区分本机环境和服务器环境。
+\begin{table}[H]
+  \centering
+  \caption{实验环境配置（待填写）}
+  \label{tab:environment}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabularx}{0.95\linewidth}{l X}
+    \toprule
+    项目 & 配置说明 \\
+    \midrule
+    硬件平台 & 填写处理器、内存或开发板型号 \\
+    操作系统 & 填写系统名称与版本 \\
+    开发工具 & 填写编辑器、编译器或仿真器及版本 \\
+    编程语言 & 填写语言名称与标准版本 \\
+    构建与运行 & 填写构建方式、关键参数或依赖 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{总体设计与关键原理}
+\subsection{总体方案}
+说明输入、输出、模块划分与模块之间的关系。项目结构可用无语言高亮的代码块展示。
+\begin{lstlisting}[numbers=none]
+project/
+|-- src/
+|-- include/
+|-- tests/
+`-- results/
+\end{lstlisting}
+
+\subsection{关键原理}
+解释算法、体系结构或硬件机制，并给出必要的公式。正文引用的资料见文献~\cite{ref:material}。
+\begin{equation}
+  S = \frac{T_{\mathrm{baseline}}}{T_{\mathrm{optimized}}}
+  \label{eq:speedup}
+\end{equation}
+其中，$T_{\mathrm{baseline}}$ 和 $T_{\mathrm{optimized}}$ 分别表示基线版本与优化版本的运行时间。若实验不涉及性能比较，请换成适用的原理公式。
+
+\section{实验过程与实现}
+\subsection{环境准备与运行方法}
+说明依赖、构建步骤与运行命令。以下命令仅演示排版，请换成项目实际命令。
+\begin{lstlisting}[numbers=none]
+make
+./program --input test.dat
+\end{lstlisting}
+
+\subsection{实验一：核心功能实现}
+\subsubsection{实验要求}
+写明需要实现的功能、输入条件与验收标准。
+
+\subsubsection{实现过程}
+说明关键修改和原因；只展示与论述有关的代码。中文说明建议放在代码块外。
+\begin{lstlisting}[language=C++,caption={代码排版示例},label={lst:example}]
+int sum(const int* data, int n) {
+    int result = 0;
+    for (int i = 0; i < n; ++i) {
+        result += data[i];
+    }
+    return result;
+}
+\end{lstlisting}
+
+\subsubsection{验证与结果}
+记录测试输入、预期输出、实际输出与判断依据。图~\ref{fig:verification} 应替换为本次实验的截图、波形或结果图。
+\ReportFigure[5cm]{images/verification.png}{实验验证结果（图片待替换）}{fig:verification}
+
+% 多模块实训：复制上述 subsection 及三个 subsubsection，依次填实验二、三……。
+% 若每个实验内容较多，可将“实验一”提升为 section，其内部标题改为 subsection。
+
+\section{实验结果与分析}
+\subsection{结果记录}
+先给出实际记录，再说明结论。以下表格只提供结构，不包含任何实验数据。
+\begin{table}[H]
+  \centering
+  \caption{实验结果记录（待填写）}
+  \label{tab:results}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabularx}{0.95\linewidth}{l X X X}
+    \toprule
+    测试条件 & 预期结果 & 实际结果 & 验证结论 \\
+    \midrule
+    条件一 & 待填写 & 待填写 & 待填写 \\
+    条件二 & 待填写 & 待填写 & 待填写 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{现象与原因分析}
+结合表~\ref{tab:results} 分析实际结果是否符合预期，并说明证据与限制。性能实验可使用公式~\eqref{eq:speedup}，同时明确计时范围、测试次数与统计方式；硬件实验可分析波形与时序。
+
+\ReportNote{写作提示}{截图下方应解释“观察到了什么、说明了什么”。没有验证的数据和推测应明确标注。正式报告可删除本提示框。}
+
+\section{问题与解决方法}
+\subsection{问题一：在此填写问题名称}
+\begin{description}[leftmargin=2em,style=nextline]
+  \item[现象] 描述可观察到的错误及触发条件。
+  \item[原因] 说明定位过程及根本原因。
+  \item[解决方法] 记录修改内容与修复后的验证结果。
+\end{description}
+
+\section{总结与展望}
+总结实际完成的工作、已验证的结果和掌握的方法；说明尚未解决的问题及后续改进方向。避免直接保留模板中的示例描述。
+
+% 参考文献与 Beamer 模板用法相同：bibitem 定义键，cite 使用键。
+% 无需 .bib 文件、BibTeX 或 Biber。替换示例条目，保留唯一键名。
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{参考文献}
+\begin{thebibliography}{99}
+  \bibitem{ref:material}
+    作者或机构。\emph{资料名称（待替换）}。版本或出版信息，年份。
+\end{thebibliography}
+
+% 可选附录：取消注释后填写，适合补充测试记录或较长代码。
+% \clearpage
+% \appendix
+% \section{补充实验记录}
+% 在此填写正文之外的补充材料。
+\end{document}

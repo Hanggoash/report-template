@@ -1,0 +1,4 @@
+interface:
+  display_name: "report-template"
+  short_description: "从课程要求到实验报告、文科报告与 Beamer 汇报的完整制作工作流"
+  default_prompt: "使用 $report-template 读取我提供的课程要求，先讨论方案和执行分工，再完成任务与报告。"

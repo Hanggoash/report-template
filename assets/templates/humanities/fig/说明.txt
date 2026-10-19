@@ -1,0 +1,5 @@
+将报告用的 JPG、PNG 或 PDF 图片放在本目录。
+封面标识（可选）：cover-logo.png。
+正文单图示例：example.jpg；双图示例：left.jpg、right.jpg。
+在 report.tex 中修改路径、图题、来源及唯一标签。
+这些图片默认不随模板提供，首次编译会显示占位框。

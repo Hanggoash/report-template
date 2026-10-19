@@ -1,0 +1,294 @@
+% !TeX program = xelatex
+% 文科报告模板 | 单文件主文档
+% 使用：复制整个文件夹 -> 修改“填写区”与正文 -> 用 XeLaTeX 编译两次。
+% 从当前项目 report.tex、pack/neumain.tex 及正式 Word 模板提炼。
+% 保留版式，去除原报告专有内容；所有【填写】、示例图表和文献均须替换。
+\documentclass[UTF8,a4paper,zihao=-4,fontset=fandol,linespread=1]{ctexart}
+
+% ==================== 1. 填写区 ====================
+% 只修改花括号内的文字。标题过长时，用较短的 \reportheadercenter。
+\newcommand{\reporttitle}{【填写报告题目：研究对象与核心问题】}
+\newcommand{\reportcategory}{【填写课程名称或专题类别】实践报告}
+\newcommand{\reportteam}{【填写团队名称】}
+\newcommand{\reporttopic}{【填写选题方向】}
+\newcommand{\reportteacher}{【填写指导教师】}
+\newcommand{\reportleader}{【填写负责人姓名】}
+\newcommand{\reportstudentid}{【填写负责人学号】}
+\newcommand{\reportphone}{【填写联系电话】}
+\newcommand{\reportschool}{【填写学校或单位名称】}
+\newcommand{\reportyear}{2026}
+\newcommand{\reportmonth}{10}
+\newcommand{\reportheadercenter}{【填写报告简称】}
+\newcommand{\reportkeywords}{关键词一；关键词二；关键词三}
+% 封面标识可选：将图片放到 fig/cover-logo.png；没有图片也能编译。
+\newcommand{\reportlogo}{fig/cover-logo.png}
+
+% ==================== 2. 固定版式（通常无需修改） ====================
+\usepackage[margin=2.5cm,headheight=16pt,headsep=12pt]{geometry}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{array,tabularx,booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{caption,float}
+\usepackage[section]{placeins}
+\usepackage{xurl,fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\urlstyle{same}
+\hypersetup{pdftitle={\reporttitle},pdfauthor={\reportteam}}
+
+% 格式依据用户提供的思政实践要求截图：A4、四边2.5cm，标题华文中宋小二号加粗，
+% 正文宋体小四号、1.5倍行距，章/节一级标题黑体小四号、标准字符间距；不少于5000字。
+% 严格字体检查：草稿默认关闭（缺字体时备用字体可编译）；正式提交前改为 true。
+\newif\ifstrictfonts
+\strictfontsfalse % 正式提交：将此行改成 \strictfontstrue。
+\ifstrictfonts
+  \IfFileExists{fonts/simsun.ttc}{}{\PackageError{report-template}{Missing fonts/simsun.ttc}{Add the official font file.}}
+  \IfFileExists{fonts/simhei.ttf}{}{\PackageError{report-template}{Missing fonts/simhei.ttf}{Add the official font file.}}
+  \IfFileExists{fonts/STZHONGS.TTF}{}{\PackageError{report-template}{Missing fonts/STZHONGS.TTF}{Add the official font file.}}
+\fi
+% 未提供指定字体时使用 TeX Live 自带的 Fandol 中文字体，仅供草稿预览。
+% 如需要原项目的指定字体，将相应文件放入 fonts/，代码自动优先使用。
+% 文件名和大小写须一致；不必为日常写作准备这些字体。
+\IfFileExists{fonts/simsun.ttc}{%
+  \setmainfont[Path=fonts/,FontIndex=0,AutoFakeBold=2]{simsun.ttc}%
+  \setCJKmainfont[Path=fonts/,FontIndex=0,AutoFakeBold=2]{simsun.ttc}%
+}{}
+\IfFileExists{fonts/simhei.ttf}{%
+  \setsansfont[Path=fonts/]{simhei.ttf}%
+  \setCJKsansfont[Path=fonts/]{simhei.ttf}%
+}{}
+\IfFileExists{fonts/STZHONGS.TTF}{%
+  \newfontfamily\titlelatin[Path=fonts/,AutoFakeBold=2]{STZHONGS.TTF}%
+  \newCJKfontfamily\titlechinese[Path=fonts/,AutoFakeBold=2]{STZHONGS.TTF}%
+}{%
+  \newcommand{\titlelatin}{\rmfamily}%
+  \newCJKfontfamily\titlechinese{FandolSong-Bold.otf}%
+}
+\newcommand{\reporttitlefont}{\titlelatin\titlechinese\zihao{-2}\bfseries}
+\newcommand{\headingfont}{\sffamily\zihao{-4}\mdseries}
+\newcommand{\majorheadingfont}{\sffamily\zihao{-4}\mdseries}
+\newcommand{\reportsection}[1]{%
+  \ctexset{section/format={\raggedright\majorheadingfont}}%
+  \section*{#1}%
+  \ctexset{section/format={\raggedright\headingfont}}%
+}
+\ctexset{
+  section={name={第,章},number=\chinese{section},
+    format=\raggedright\headingfont,aftername=\quad,
+    beforeskip=12pt,afterskip=6pt},
+  subsection={format=\raggedright\headingfont,aftername=\quad,
+    beforeskip=8pt,afterskip=4pt},
+  subsubsection={format=\raggedright\headingfont,aftername=\quad,
+    beforeskip=6pt,afterskip=3pt}
+}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\setcounter{secnumdepth}{2} % 如需 1.1.1 三级编号，改为 3。
+\renewcommand{\refname}{参考文献}
+\setstretch{1.5}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\captionsetup{font={normalsize,stretch=1.1},labelsep=quad,skip=6pt}
+\setlength{\textfloatsep}{14pt plus 2pt minus 2pt}
+\setlength{\intextsep}{14pt plus 2pt minus 2pt}
+\renewcommand{\arraystretch}{1.25}
+
+% 页眉：左侧正文页码，中间简称，右侧日期。封面不计正文页码。
+\newcommand{\reportheaderfont}{\normalfont\rmfamily\zihao{5}\setstretch{1}}
+\newcommand{\reportpagestyle}{%
+  \fancyhf{}%
+  \fancyhead[L]{\reportheaderfont\textbullet\enspace\thepage\enspace\textbullet}%
+  \fancyhead[C]{\reportheaderfont\reportheadercenter}%
+  \fancyhead[R]{\reportheaderfont\reportyear 年\reportmonth 月}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+\fancypagestyle{report}{\reportpagestyle}
+\fancypagestyle{plain}{\reportpagestyle}
+\newcommand{\filledline}[1]{%
+  \underline{\parbox[t]{8cm}{\centering\strut #1\strut\par}}%
+}
+
+% 图片不存在时显示占位框，便于模板首次编译；提交前必须替换或删除。
+\newcommand{\imageorplaceholder}[3]{%
+  \IfFileExists{#1}{%
+    \includegraphics[width=#2,height=#3,keepaspectratio]{#1}%
+  }{%
+    \fbox{\parbox[c][#3][c]{\dimexpr#2-2\fboxsep-2\fboxrule\relax}{%
+      \centering\small 图片占位\par\medskip
+      \path{#1}\par\medskip 请放入图片或删除本例%
+    }}%
+  }%
+}
+% 单图：\photoone{路径}{图题及来源}{唯一标签}
+\newcommand{\photoone}[3]{%
+  \begin{figure}[htbp]\centering
+    \imageorplaceholder{#1}{0.85\linewidth}{5cm}
+    \caption{#2}\label{#3}
+  \end{figure}%
+}
+% 双图：\photopair{左图路径}{右图路径}{共同图题及来源}{唯一标签}
+\newcommand{\photopair}[4]{%
+  \begin{figure}[htbp]\centering
+    \imageorplaceholder{#1}{0.48\linewidth}{4cm}\hfill
+    \imageorplaceholder{#2}{0.48\linewidth}{4cm}
+    \caption{#3}\label{#4}
+  \end{figure}%
+}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+
+% ==================== 3. 封面与成员 ====================
+\begin{titlepage}
+  \thispagestyle{empty}\singlespacing\zihao{-4}
+  \begin{center}
+    \IfFileExists{\reportlogo}{%
+      \includegraphics[width=15cm,height=3cm,keepaspectratio]{\reportlogo}%
+    }{\vspace*{2.5cm}}
+    \vspace{0.8cm}
+    {\zihao{3}\reportyear 年\reportcategory\par}
+    \vspace{1.2cm}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}r l@{}}
+      实践团名： & \filledline{\reportteam} \\[0.3cm]
+      实践选题： & \filledline{\reporttopic} \\[0.3cm]
+      实践题目： & \filledline{\reporttitle} \\[0.3cm]
+      指导教师： & \filledline{\reportteacher} \\[0.3cm]
+      团长姓名： & \filledline{\reportleader} \\[0.3cm]
+      团长学号： & \filledline{\reportstudentid} \\[0.3cm]
+      联系电话： & \filledline{\reportphone}
+    \end{tabular}
+    \vspace{0.6cm}
+    \begin{flushleft}成员信息（包含负责人）：\end{flushleft}
+    % 增删成员：复制或删除下面的一整行。每行保留 3 个 & 和末尾的 \\ \hline。
+    \begin{tabularx}{\textwidth}{|*{4}{>{\centering\arraybackslash}X|}}
+      \hline 姓名 & 学院 & 学号 & 年级 \\ \hline
+      \rule{0pt}{0.65cm}【姓名】 & 【学院】 & 【学号】 & 【年级】 \\ \hline
+      \rule{0pt}{0.65cm}【姓名】 & 【学院】 & 【学号】 & 【年级】 \\ \hline
+      \rule{0pt}{0.65cm}【姓名】 & 【学院】 & 【学号】 & 【年级】 \\ \hline
+    \end{tabularx}
+    \vfill
+    {\headingfont\reportschool\par}
+    \vspace{0.3cm}
+    {\reportyear 年\quad\reportmonth 月\par}
+  \end{center}
+\end{titlepage}
+
+% ==================== 4. 正文（替换所有【填写】提示） ====================
+% 本次思政实践要求不少于5000字；模板提示、封面信息不作为报告正文。
+% 字符间距保持默认标准值，不设置 LetterSpace 或 FakeStretch。
+\pagestyle{report}\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+\rmfamily\zihao{-4}\setstretch{1.5}
+\begin{center}{\reporttitlefont\reporttitle\par}\end{center}
+
+% 如课程要求目录，可取消下面三行的注释；默认不生成目录。
+% \tableofcontents
+% \clearpage
+% 无编号的摘要等大标题默认不进目录；可按需用 \addcontentsline{toc}{section}{摘要}。
+
+\reportsection{摘要}
+【填写：用一段话交代研究问题、对象与范围、材料与方法、主要发现和结论。建议约300至400字，按课程要求调整；在正文完成后定稿。】
+
+\noindent\textbf{关键词：}\reportkeywords
+
+\reportsection{引言}
+【填写：从具体社会现象、政策背景或已有研究引出问题；说明选题价值、已有认识与不足，以及本报告的研究目的和分析思路。需要引用时使用文献命令，例如\cite{source1}；该条目目前只是格式占位。】
+
+\reportsection{本论}
+% 下面的章、节标题是通用建议；可以重命名、增删，编号会自动更新。
+\section{研究对象与研究方法}
+\subsection{研究问题与对象选择}
+【填写：提出可以回答的核心问题，界定对象、地点、时间范围及案例选择理由。】
+\subsection{材料来源与研究过程}
+【填写：说明实际完成的走访、访谈、问卷或文献收集，记录日期、对象、数量和资料来源；只保留确实采用的方法。】
+\subsection{分析方法与比较维度}
+【填写：解释如何整理、比较与分析材料。多案例比较应采用一致的维度；统计资料应明确时间和口径。】
+
+\section{研究背景与案例概况}
+\subsection{背景与基本情况}
+【填写：介绍理解问题所必需的历史、制度、社会或文化背景，附可靠来源。】
+\subsection{案例特点与比较基础}
+【填写：简要说明各案例的共同点与差异。可使用下列三线表组织材料；示例行须替换。】
+
+% 表格示例：\caption 后写 \label；一行 4 列，用 3 个 & 分隔。
+\begin{table}[htbp]
+  \centering
+  \caption{案例基本情况比较（示例，提交前替换）}\label{tab:cases}
+  \begin{tabularx}{\linewidth}{@{}lXXX@{}}
+    \toprule
+    对象 & 背景特征 & 比较维度 & 材料来源 \\
+    \midrule
+    案例甲 & 【填写】 & 【填写】 & 【填写】 \\
+    案例乙 & 【填写】 & 【填写】 & 【填写】 \\
+    案例丙 & 【填写】 & 【填写】 & 【填写】 \\
+    \bottomrule
+  \end{tabularx}
+  \par\smallskip{\small 来源：【填写出处、数据年份及整理方式】。\par}
+\end{table}
+表\ref{tab:cases}展示了【填写：与研究问题有关的比较结论】。
+
+\section{调研发现与材料分析}
+\subsection{主要发现}
+【填写：围绕核心问题分组呈现事实与材料；每一判断对应照片、访谈记录、文本或统计数据。】
+\subsection{具体材料与解释}
+【填写：先说明材料反映了什么，再解释其与论点的关系；图\ref{fig:sample}是单图插入示例。照片说明应包含地点、日期和来源。】
+
+% 图片示例：把图片放入 fig/，修改路径、图题和标签；不用时删除这段与相关引用。
+\photoone{fig/example.jpg}{【填写图题】；来源：【填写拍摄者、地点与日期或外部出处】}{fig:sample}
+
+% 两图并排示例（需要时取消下一行的注释）：
+% \photopair{fig/left.jpg}{fig/right.jpg}{【填写共同图题与来源】}{fig:pair}
+
+\section{比较讨论与原因分析}
+\subsection{共性、差异及其形成原因}
+【填写：在相同维度下比较材料，解释相似或不同表现的原因；区分现场事实、受访者观点与作者推论。】
+\subsection{与已有研究或理论的联系}
+【填写：结合真实引用的理论、政策或研究，讨论材料支持、补充或限制了哪些认识。直接引文应注明出处和页码。】
+
+\section{改进建议与实践启示}
+\subsection{针对问题的具体建议}
+【填写：逐项回应前文发现的问题，说明谁可以采取何种措施，以及适用条件。】
+\subsection{社会意义与实践反思}
+【填写：结合课程主题说明研究的现实意义，以及调研过程带来的认识；避免脱离材料的空泛结论。】
+
+% 如实际采用量化分析，可在“结果与讨论”前增加一章：
+% \section{数据分析与综合评价}
+% 依次交代数据范围、变量与方法、结果及解释；不需要时保持注释。
+% 公式示例：\begin{equation} \bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i \label{eq:mean} \end{equation}
+
+\reportsection{结果与讨论}
+【填写：直接回答引言中的问题，概括最主要的发现，说明理论或实践意义；不在此处首次引入关键证据。】
+
+【填写：说明样本、材料、时间和方法的局限，给出进一步研究方向。若课程要求单列“结论”，可再使用\texttt{\textbackslash reportsection\{结论\}}。】
+
+% ==================== 5. 参考文献（全部替换为真实条目） ====================
+% 正文 \cite{source1} 对应下方 \bibitem{source1}，键名必须完全一致。
+% 不需要 .bib 文件，不必运行 BibTeX/Biber；XeLaTeX 两次即可更新引用。
+% 下列仅是条目写法示例，不代表真实文献。按正文首次引用次序排序并删除未用条目。
+\begingroup
+\ctexset{section/format={\raggedright\majorheadingfont}}
+\begin{thebibliography}{99}
+  \setlength{\itemsep}{4pt}\interlinepenalty=10000\raggedright
+  \bibitem{source1}
+  【作者或机构】. 【文章题名】[J]. 【刊物名称】, 【年份】, 【卷(期)】: 【起止页码】.
+  % 网页文献示例（需要时取消注释，填入真实资料，并在正文引用 source2）：
+  % \bibitem{source2}
+  % 【发布机构】. 【网页或文件题名】[EB/OL]. (【发布日期】)[【访问日期】].
+  % \url{https://填写真实网址}.
+\end{thebibliography}
+\endgroup
+
+% 附录可选：取消注释并填写材料；默认无附录。
+% \clearpage
+% \reportsection{附录}
+% \subsection*{附录一：访谈提纲或调查问卷}
+% 【填写实际使用的提纲、问卷或补充材料，并处理需要匿名的信息。】
+\end{document}
