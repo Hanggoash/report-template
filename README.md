@@ -67,10 +67,14 @@ flowchart TD
     C --> X["模板确认后，询问额外自定义需求"]
     B --> X
     X -->|记录答复| P["讨论计划并执行任务"]
-    P --> M{"材料齐备？"}
-    M -->|否| E["补充操作、截图或数据<br/>按指定路径保存，或发到聊天"]
-    E --> M
-    M -->|是| Q4{"由谁撰写全文？"}
+    P --> MaterialCheck
+    subgraph MaterialCheck[" "]
+        direction LR
+        M{"材料齐备？"} -->|否| E["补充操作、截图或数据<br/>按指定路径保存，或发到聊天"]
+        E --> M
+    end
+    style MaterialCheck fill:transparent,stroke:transparent
+    MaterialCheck -->|是| Q4{"由谁撰写全文？"}
     Q4 -->|当前 Agent| S["询问语言风格<br/>默认：朴素、清晰"]
     S --> W["生成完整 TeX"]
     Q4 -->|其他 Agent| H["生成骨干 TeX 和交接 Prompt"]
