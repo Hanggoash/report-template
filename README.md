@@ -6,6 +6,8 @@
 
 ## 安装 Skill
 
+也可以直接把本仓库链接交给 Agent，请它根据当前操作系统安装 Skill 和所需依赖，并检查安装结果。
+
 采用 [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills#installation) 使用的 [Skills CLI](https://github.com/vercel-labs/skills#install-a-skill) 安装方式。首次使用先按下节安装依赖，再在任意目录执行：
 
 ```sh
