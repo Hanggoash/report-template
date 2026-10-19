@@ -53,35 +53,7 @@ ln -s ~/Desktop/Develop/report-template ~/.codex/skills/report-template
 
 ## 流程示意
 
-```mermaid
-flowchart TD
-    Q1["① 报告类型：内置 / 已保存 / 新增自定义"] --> Q2["② 确认工作目录"]
-    Q2 --> Q3["③ 选择执行模式：自动 / 引导 / 混合"]
-    Q3 --> T{"新增自定义模板？"}
-    T -->|是| R["接收 TeX 模板<br/>非 TeX 则经许可按截图开发并预览"]
-    R --> K{"样式确认后如何保存？"}
-    K -->|仅本次| C["在本次工作目录使用模板"]
-    K -->|永久保存| L["命名并加入本地模板库"]
-    L --> C
-    T -->|否| B["复制内置或已保存的模板"]
-    C --> X["模板确认后，询问额外自定义需求"]
-    B --> X
-    X -->|记录答复| P["讨论计划并执行任务"]
-    P --> MaterialCheck
-    subgraph MaterialCheck[" "]
-        direction LR
-        M{"材料齐备？"} -->|否| E["补充操作、截图或数据<br/>按指定路径保存，或发到聊天"]
-        E --> M
-    end
-    style MaterialCheck fill:transparent,stroke:transparent
-    MaterialCheck -->|是| Q4{"由谁撰写全文？"}
-    Q4 -->|当前 Agent| S["询问语言风格<br/>默认：朴素、清晰"]
-    S --> W["生成完整 TeX"]
-    Q4 -->|其他 Agent| H["生成骨干 TeX 和交接 Prompt"]
-    H --> U["用户转交其他 AI<br/>将返回的 TeX 发回当前对话"]
-    W --> F["当前 Agent 检查、编译并交付 PDF"]
-    U --> F
-```
+![报告制作流程图](docs/workflow.svg)
 
 ## 文件保存
 
