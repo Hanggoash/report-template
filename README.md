@@ -175,19 +175,58 @@ latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex
 
 ![报告制作流程图](docs/workflow.svg)
 
-## 文件保存
+## 项目结构
 
-所有文件保存在你确认的工作目录中：
+技能仓库包含以下文件和目录：
 
-- `templates/custom/`：本次自定义模板的原件、样式截图和依赖（如使用）。
-- `report/`：报告 TeX、字体和正文图片。
-- `materials/`、`evidence/`、`work/`：原始材料、截图数据和代码。
-- `handoff/`：接力写作所用的骨干源码和 Prompt（如选择接力）。
-- `deliverables/`：最终 PDF 和源文件包。
+```text
+report-template/
+├── README.md                     用户使用与安装说明
+├── SKILL.md                      Agent 的提问、执行、写作和交付指令
+├── agents/
+│   └── openai.yaml               技能显示信息、默认提示与调用策略
+├── assets/
+│   └── templates/
+│       ├── experiment/           实验报告模板：main.tex、校徽和手册
+│       ├── humanities/           文科报告模板：report.tex、字体和手册
+│       ├── beamer/               学术汇报模板：main.tex、字体和手册
+│       └── custom/               用户永久保存的模板，入库时创建
+├── references/
+│   ├── experiment.md             实验模板的填写与使用规则
+│   ├── humanities.md             文科模板的填写、字体与引用规则
+│   ├── beamer.md                 汇报模板的内容组织与排版规则
+│   └── delivery.md               编译、版面检查和交付要求
+├── scripts/
+│   ├── create_project.py         复制内置模板并建立独立任务目录
+│   └── check_assets.py           检查必需的模板、字体和说明文件
+├── tests/
+│   └── test_create_project.py    验证模板复制、防覆盖和路径检查
+├── docs/
+│   └── workflow.svg              README 中的流程图
+├── .gitignore                    排除缓存和编译中间文件
+└── .gitattributes                标记 PDF、字体等二进制资源
+```
 
-Agent 会保存进度记录。下次输入“`$report-template` 继续某项任务”，并说明工作目录即可。
+`assets/templates/` 保存可复用模板，`references/` 提供按需读取的说明。制作报告时，Agent 将模板复制到工作目录后再编辑。永久入库的自定义模板放在 `assets/templates/custom/`，每个模板有独立目录及 `template.json` 名称记录。
 
-永久保存的模板位于本地 Skill 的 `assets/templates/custom/`，每个模板包含独立目录和名称记录，供以后新建报告时选择。
+## 报告工作目录
+
+每次报告任务的材料和成果保存在你确认的工作目录中：
+
+```text
+工作目录/
+├── templates/custom/    本次自定义模板的原件、样式截图和依赖（如使用）
+├── materials/           老师要求、原始资料和返回的接力稿
+├── evidence/            操作截图、数据和真实运行结果
+├── work/                代码及其他工作文件
+├── report/              正在编辑的 TeX、字体和正文图片
+├── handoff/             骨干 TeX 与交接 Prompt（如选择接力）
+├── deliverables/        最终 PDF 和源文件包
+├── task.json            模板、模式、阶段及写作选择等任务信息
+└── workflow.md          已确认要求、分工、进度、证据索引和下一步
+```
+
+Agent 会维护任务记录。下次输入“`$report-template` 继续某项任务”，并说明工作目录即可。
 
 ## 资源说明
 
