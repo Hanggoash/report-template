@@ -34,8 +34,7 @@ npx skills list --global --agent codex
 
 已有相应工具时可跳过安装。以下命令安装本地编译环境；完整 TeX 发行版占用空间较大，请预留数 GB。随 Skill 提供的字体无需另行安装到系统，保持其项目内相对路径即可。
 
-<details>
-<summary>macOS：Homebrew + MacTeX</summary>
+### macOS：Homebrew + MacTeX
 
 未安装 Homebrew 时，先运行[官方安装命令](https://docs.brew.sh/Installation)，并按安装器提示设置 PATH：
 
@@ -58,10 +57,7 @@ export PATH="/Library/TeX/texbin:$PATH"
 
 MacTeX 包含 XeLaTeX、中文字体和宏包、latexmk；可使用 macOS 自带的 Perl。
 
-</details>
-
-<details>
-<summary>Windows 10/11（x64）：WinGet + MiKTeX</summary>
+### Windows 10/11（x64）：WinGet + MiKTeX
 
 在 PowerShell 中运行以下命令；`winget` 由微软的[应用安装程序](https://learn.microsoft.com/en-us/windows/package-manager/winget/)提供：
 
@@ -85,10 +81,7 @@ initexmf --set-config-value='[MPM]AutoInstall=yes'
 
 若 PowerShell 提示禁止运行 `npx.ps1`，可将安装命令中的 `npx` 换成 `npx.cmd`。
 
-</details>
-
-<details>
-<summary>Linux：Ubuntu / Debian（Bash）</summary>
+### Linux：Ubuntu / Debian（Bash）
 
 安装 Git、Python 和 TeX Live。以下组件覆盖三套内置模板所需的 XeLaTeX、[中文支持](https://packages.ubuntu.com/noble/texlive-lang-chinese)及[常用宏包](https://packages.ubuntu.com/noble/texlive-latex-extra)：
 
@@ -110,8 +103,6 @@ nvm install --lts
 ```
 
 其他 Linux 发行版请使用其包管理器安装对应组件；WSL 可在 Ubuntu 环境中执行同组命令。
-
-</details>
 
 ### 检查与编译
 
