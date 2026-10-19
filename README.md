@@ -6,7 +6,7 @@
 
 ## 安装 Skill
 
-采用 [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills#installation) 使用的 [Skills CLI](https://github.com/vercel-labs/skills#install-a-skill) 安装方式，直接从 GitHub 获取，不依赖本地仓库位置。首次使用先按下节安装依赖，再在任意目录执行：
+采用 [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills#installation) 使用的 [Skills CLI](https://github.com/vercel-labs/skills#install-a-skill) 安装方式。首次使用先按下节安装依赖，再在任意目录执行：
 
 ```sh
 npx skills add Hanggoash/report-template --skill report-template --agent codex --global
@@ -14,7 +14,7 @@ npx skills add Hanggoash/report-template --skill report-template --agent codex -
 
 `--global` 安装到用户级技能目录，供不同项目使用；`--agent codex` 指定 Codex。使用其他受支持的 Agent 时，可去掉该参数，按安装器提示选择。
 
-当前仓库为私有仓库，安装账号须有访问权限，并已配置 GitHub 的 Git 认证；安装器会沿用现有凭据。安装后可检查：
+安装后可检查：
 
 ```sh
 npx skills list --global --agent codex
@@ -27,7 +27,7 @@ npx skills list --global --agent codex
 | 依赖 | 用途 |
 | --- | --- |
 | Node.js 22.20.0 以上（推荐当前 LTS）及 npm/npx | 运行 Skills CLI；版本要求见[安装器配置](https://github.com/vercel-labs/skills/blob/main/package.json)。 |
-| Git | 获取技能仓库，包括私有仓库。 |
+| Git | 获取技能仓库。 |
 | Python 3.9 以上 | 运行目录创建和资源检查工具，无需额外 Python 包。 |
 | XeLaTeX、中文支持和 LaTeX 宏包 | 编译中文报告和 Beamer。 |
 | latexmk | 自动完成多轮编译；Windows 还需 Perl。 |
