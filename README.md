@@ -19,7 +19,14 @@ ln -s ~/Desktop/Develop/report-template ~/.codex/skills/report-template
 
 ## 使用
 
-输入 `$report-template`，附上老师的要求或已有材料。Agent 会依次询问：
+安装后，可以输入 `$report-template`，也可以直接用自然语言调用：
+
+```text
+请你使用 report-template 的 skill，帮我完成这次实验报告。
+用 report-template 继续上次的报告，工作目录是……
+```
+
+附上老师的要求或已有材料后，Agent 会依次询问：
 
 1. **报告类型**：实验报告、文科报告、学术汇报、已保存的自定义类型，或新增自定义模板。
 2. **工作目录**：本次任务的文件保存在哪里。
