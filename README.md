@@ -4,18 +4,138 @@
 
 支持实验报告、文科报告、学术汇报和自定义报告。内置三套 TeX 模板，也能经你许可按样式截图制作新模板，逐步扩充本地模板库。写作可由当前 Agent 完成，或交给你选择的其他 AI 接力。
 
-## 安装
+## 安装 Skill
 
-若仓库位于桌面的 `Develop/report-template`，可在 Codex 中通过符号链接安装：
+采用 [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills#installation) 使用的 [Skills CLI](https://github.com/vercel-labs/skills#install-a-skill) 安装方式，直接从 GitHub 获取，不依赖本地仓库位置。首次使用先按下节安装依赖，再在任意目录执行：
 
 ```sh
-mkdir -p ~/.codex/skills
-ln -s ~/Desktop/Develop/report-template ~/.codex/skills/report-template
+npx skills add Hanggoash/report-template --skill report-template --agent codex --global
 ```
 
-目标位置已有同名技能时先检查。如安装后未识别，重新加载技能或新建会话。
+`--global` 安装到用户级技能目录，供不同项目使用；`--agent codex` 指定 Codex。使用其他受支持的 Agent 时，可去掉该参数，按安装器提示选择。
 
-辅助工具需要 Python 3；生成 PDF 需要支持中文的 XeLaTeX 环境，例如 TeX Live / MacTeX，或支持完整项目的在线编译器。
+当前仓库为私有仓库，安装账号须有访问权限，并已配置 GitHub 的 Git 认证；安装器会沿用现有凭据。安装后可检查：
+
+```sh
+npx skills list --global --agent codex
+```
+
+如技能未出现，重新加载技能或新建会话。重装或更新前，请先备份自己添加的 `assets/templates/custom/` 模板库。
+
+## 安装依赖
+
+| 依赖 | 用途 |
+| --- | --- |
+| Node.js 22.20.0 以上（推荐当前 LTS）及 npm/npx | 运行 Skills CLI；版本要求见[安装器配置](https://github.com/vercel-labs/skills/blob/main/package.json)。 |
+| Git | 获取技能仓库，包括私有仓库。 |
+| Python 3.9 以上 | 运行目录创建和资源检查工具，无需额外 Python 包。 |
+| XeLaTeX、中文支持和 LaTeX 宏包 | 编译中文报告和 Beamer。 |
+| latexmk | 自动完成多轮编译；Windows 还需 Perl。 |
+
+已有相应工具时可跳过安装。以下命令安装本地编译环境；完整 TeX 发行版占用空间较大，请预留数 GB。随 Skill 提供的字体无需另行安装到系统，保持其项目内相对路径即可。
+
+<details>
+<summary>macOS：Homebrew + MacTeX</summary>
+
+未安装 Homebrew 时，先运行[官方安装命令](https://docs.brew.sh/Installation)，并按安装器提示设置 PATH：
+
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+然后安装工具和不带图形应用的完整 [MacTeX](https://formulae.brew.sh/cask/mactex-no-gui)：
+
+```sh
+brew install node git python
+brew install --cask mactex-no-gui
+```
+
+安装后重新打开终端。若仍找不到 TeX 命令，可在当前终端执行：
+
+```sh
+export PATH="/Library/TeX/texbin:$PATH"
+```
+
+MacTeX 包含 XeLaTeX、中文字体和宏包、latexmk；可使用 macOS 自带的 Perl。
+
+</details>
+
+<details>
+<summary>Windows 10/11（x64）：WinGet + MiKTeX</summary>
+
+在 PowerShell 中运行以下命令；`winget` 由微软的[应用安装程序](https://learn.microsoft.com/en-us/windows/package-manager/winget/)提供：
+
+```powershell
+winget install --id OpenJS.NodeJS.LTS --exact --source winget
+winget install --id Git.Git --exact --source winget
+winget install --id Python.Python.3.13 --exact --source winget
+winget install --id MiKTeX.MiKTeX --exact --scope user --source winget
+winget install --id StrawberryPerl.StrawberryPerl --exact --source winget
+```
+
+使用用户级 MiKTeX 安装。Strawberry Perl 用于运行 [latexmk](https://ctan.org/pkg/latexmk)。安装后重新打开 PowerShell，再安装中文支持与编译工具，并允许 MiKTeX 在编译时下载其他缺失宏包：
+
+```powershell
+miktex packages update-package-database
+miktex packages install ctex fandol latexmk
+initexmf --set-config-value='[MPM]AutoInstall=yes'
+```
+
+命令依据 MiKTeX 的[包管理说明](https://docs.miktex.org/manual/miktex-packages.html)和[自动安装说明](https://miktex.org/kb/just-enough-tex)。首次编译需联网下载尚未安装的宏包。
+
+若 PowerShell 提示禁止运行 `npx.ps1`，可将安装命令中的 `npx` 换成 `npx.cmd`。
+
+</details>
+
+<details>
+<summary>Linux：Ubuntu / Debian（Bash）</summary>
+
+安装 Git、Python 和 TeX Live。以下组件覆盖三套内置模板所需的 XeLaTeX、[中文支持](https://packages.ubuntu.com/noble/texlive-lang-chinese)及[常用宏包](https://packages.ubuntu.com/noble/texlive-latex-extra)：
+
+```sh
+sudo apt update
+sudo apt install -y git curl ca-certificates python3 \
+  texlive-xetex texlive-lang-chinese texlive-latex-extra \
+  texlive-fonts-recommended texlive-pictures latexmk
+```
+
+系统源中的 Node.js 可能低于 Skills CLI 的要求，可用 [nvm 官方安装方式](https://github.com/nvm-sh/nvm#install--update-script)安装当前 LTS：
+
+```sh
+export NVM_DIR="$HOME/.nvm"
+mkdir -p "$NVM_DIR"
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash
+. "$NVM_DIR/nvm.sh"
+nvm install --lts
+```
+
+其他 Linux 发行版请使用其包管理器安装对应组件；WSL 可在 Ubuntu 环境中执行同组命令。
+
+</details>
+
+### 检查与编译
+
+依赖须安装在 Agent 实际执行任务的环境中；远程主机或 WSL 使用各自的环境。安装后重新打开终端和 Agent 应用，再检查：
+
+```sh
+node --version
+npm --version
+git --version
+xelatex --version
+latexmk -v
+kpsewhich ctex.sty
+kpsewhich FandolSong-Regular.otf
+```
+
+Python 在 macOS/Linux 用 `python3 --version` 检查，Windows 用 `py -3 --version`；Windows 另可运行 `perl --version`。两个 `kpsewhich` 命令应返回实际文件路径。
+
+在作业的 `report/` 目录中编译：
+
+```sh
+latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex
+```
+
+文科模板把 `main.tex` 换成 `report.tex`；自定义模板使用其主文件名。仅使用 XeLaTeX 时连续编译两次。自定义模板若引入额外宏包或字体，再按其要求补充。
 
 ## 使用
 
