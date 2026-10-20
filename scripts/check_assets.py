@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = (
     "SKILL.md", "agents/openai.yaml", "scripts/create_project.py",
     "references/experiment.md", "references/humanities.md", "references/beamer.md", "references/delivery.md",
-    "assets/templates/experiment/main.tex", "assets/templates/experiment/images/说明.txt",
+    "assets/templates/experiment/main.tex", "assets/templates/experiment/images/logo.png",
     "assets/templates/experiment/使用手册.pdf",
     "assets/templates/humanities/report.tex", "assets/templates/humanities/使用手册.pdf",
     "assets/templates/humanities/fonts/simsun.ttc",
