@@ -8,6 +8,14 @@
 - **接力写作**：支持当前 Agent 撰写全文，或提供骨干 TeX 和交接说明，由用户转交其他 AI 写作，再由原 Agent 编译。
 - **进度保存**：记录任务要求、执行进度和证据，支持后续继续处理。
 
+## 模板预览
+
+以下为三套模板编译后的页面截图，点击图片可查看大图。
+
+| 实验报告（封面） | 文科报告（正文） | 学术汇报（图表页） |
+| --- | --- | --- |
+| [![实验报告模板封面](docs/previews/experiment.png)](docs/previews/experiment.png) | [![文科报告模板正文](docs/previews/humanities.png)](docs/previews/humanities.png) | [![学术汇报 Beamer 模板图表页](docs/previews/beamer.png)](docs/previews/beamer.png) |
+
 ## 安装 Skill
 
 也可以直接把本仓库链接交给 Agent，请它根据当前操作系统安装 Skill 和所需依赖，并检查安装结果。
@@ -208,7 +216,8 @@ report-template/
 ├── tests/
 │   └── test_create_project.py    验证模板复制、防覆盖和路径检查
 ├── docs/
-│   └── workflow.svg              README 中的流程图
+│   ├── workflow.svg              README 中的流程图
+│   └── previews/                 三套模板的页面截图
 ├── .gitignore                    排除缓存和编译中间文件
 └── .gitattributes                标记 PDF、字体等二进制资源
 ```
