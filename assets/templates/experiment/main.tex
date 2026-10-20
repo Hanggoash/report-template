@@ -27,7 +27,7 @@
 \newcommand{\Supervisor}{指导教师姓名}
 \newcommand{\ReportDate}{2026年10月5日} % 按实际完成日期修改
 \newcommand{\Institution}{xx大学计算机科学与技术学院}
-\newcommand{\LogoFile}{images/logo.png}
+\newcommand{\LogoFile}{images/logo.png} % 可选：放入自己的校徽；缺图时显示占位符
 % 不需要仓库地址时留空；URL 中的下划线不需要写成 \_。
 \newcommand{\RepositoryURL}{}
 \newcommand{\SummaryLabel}{摘要} % 也可改为“自我评价”
@@ -119,7 +119,10 @@
       \IfFileExists{\LogoFile}{%
         \includegraphics[width=0.8\linewidth,height=2.2cm,keepaspectratio]{\LogoFile}\par
       }{%
-        {\zihao{3}\heiti\Institution\par}% 单文件预览中显示文字替代校徽
+        \fbox{\parbox[c][2.2cm][c]{0.75\linewidth}{%
+          \centering\zihao{4}\heiti 校徽占位符\par
+          \medskip\small\ttfamily images/logo.png
+        }}\par
       }
       \vspace{1.2cm}
     \fi

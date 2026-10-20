@@ -215,7 +215,7 @@ report-template/
 │   └── openai.yaml               技能显示信息、默认提示与调用策略
 ├── assets/
 │   └── templates/
-│       ├── experiment/           实验报告模板：main.tex、校徽和手册
+│       ├── experiment/           实验报告模板：main.tex、图片目录和手册
 │       ├── humanities/           文科报告模板：report.tex、字体和手册
 │       ├── beamer/               学术汇报模板：main.tex、字体和手册
 │       └── custom/               用户永久保存的模板，入库时创建
@@ -259,6 +259,6 @@ Agent 会维护任务记录。下次输入“`$report-template` 继续某项任�
 
 ## 资源说明
 
-思源黑体的许可见其 `fonts/LICENSE.txt`；其他字体、校徽和手册沿用各自授权，本仓库未统一授予再分发许可。自定义模板也需提供编译所需的字体和图片。
+思源黑体的许可见其 `fonts/LICENSE.txt`；其他字体和手册沿用各自授权，本仓库未统一授予再分发许可。自定义模板也需提供编译所需的字体和图片。
 
 Agent 的执行指令见 [SKILL.md](SKILL.md)。
