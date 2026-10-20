@@ -10,11 +10,25 @@
 
 ## 模板预览
 
-以下为三套模板编译后的页面截图，点击图片可查看大图。
+每种模板展示三页编译后的截图，点击图片可查看大图。
 
-| 实验报告（封面） | 文科报告（正文） | 学术汇报（图表页） |
+### 实验报告
+
+| 封面 | 实验设计 | 实验结果 |
 | --- | --- | --- |
-| [![实验报告模板封面](docs/previews/experiment.png)](docs/previews/experiment.png) | [![文科报告模板正文](docs/previews/humanities.png)](docs/previews/humanities.png) | [![学术汇报 Beamer 模板图表页](docs/previews/beamer.png)](docs/previews/beamer.png) |
+| [![实验报告模板封面](docs/previews/experiment.png)](docs/previews/experiment.png) | [![实验报告模板实验设计页](docs/previews/experiment-design.png)](docs/previews/experiment-design.png) | [![实验报告模板实验结果页](docs/previews/experiment-results.png)](docs/previews/experiment-results.png) |
+
+### 文科报告
+
+| 封面 | 正文 | 图表与分析 |
+| --- | --- | --- |
+| [![文科报告模板封面](docs/previews/humanities-cover.png)](docs/previews/humanities-cover.png) | [![文科报告模板正文](docs/previews/humanities.png)](docs/previews/humanities.png) | [![文科报告模板图表与分析页](docs/previews/humanities-analysis.png)](docs/previews/humanities-analysis.png) |
+
+### 学术汇报
+
+| 标题页 | 方法流程 | 实验图表 |
+| --- | --- | --- |
+| [![学术汇报 Beamer 模板标题页](docs/previews/beamer-cover.png)](docs/previews/beamer-cover.png) | [![学术汇报 Beamer 模板方法流程页](docs/previews/beamer-method.png)](docs/previews/beamer-method.png) | [![学术汇报 Beamer 模板实验图表页](docs/previews/beamer.png)](docs/previews/beamer.png) |
 
 ## 安装 Skill
 
